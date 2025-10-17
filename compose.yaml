@@ -49,6 +49,8 @@ services:
       context: auth-service
       dockerfile: Dockerfile
     hostname: auth
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     ports:
       - 8081:8080
 
