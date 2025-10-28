@@ -60,3 +60,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+
+  exchange:
+    build:
+      context: exchange
+      dockerfile: Dockerfile
+    hostname: exchange
+    environment:
+      AWESOME_API_KEY: ${AWESOME_API_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    ports:
+      - 8082:8080
