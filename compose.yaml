@@ -67,5 +67,20 @@ services:
       dockerfile: Dockerfile
     hostname: exchange
     environment:
-      AWESOME_API_KEY: ${AWESOME_API_KEY}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+
+  order:
+    build:
+      context: order-service
+      dockerfile: Dockerfile
+    hostname: order
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    restart: always
+    deploy:
+      replicas: 1
+    depends_on:
+      - db
