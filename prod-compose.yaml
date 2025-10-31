@@ -53,11 +53,11 @@ services:
     ports:
       - 8080:8080
 
-  # exchange:
-  #   image: henriquebrnetto/exchange
-  #   hostname: exchange
-  #   environment:
-  #     JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+  exchange:
+    image: henriquebrnetto/exchange
+    hostname: exchange
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
 
   order:
     image: henriquebrnetto/order
