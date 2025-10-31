@@ -1,0 +1,74 @@
+name: store-api
+
+services:
+
+  db:
+    image: postgres:17.6
+    hostname: db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # ports:
+    #   - 5432:5432
+    volumes:
+      - ./volume/db:/var/lib/postgresql/data
+
+  account:
+    image: henriquebrnetto/account
+    hostname: account
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: always
+    deploy:
+      replicas: 1
+    depends_on:
+      - db
+  
+  product:
+    image: henriquebrnetto/product
+    hostname: product
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: always
+    deploy:
+      replicas: 1
+    depends_on:
+      - db
+
+  auth:
+    image: henriquebrnetto/auth
+    hostname: auth
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    depends_on:
+      - db
+
+  gateway:
+    image: henriquebrnetto/gateway
+    ports:
+      - 8080:8080
+
+  # exchange:
+  #   image: henriquebrnetto/exchange
+  #   hostname: exchange
+  #   environment:
+  #     JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+
+  order:
+    image: henriquebrnetto/order
+    hostname: order
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DATABASE_USERNAME: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    restart: always
+    deploy:
+      replicas: 1
+    depends_on:
+      - db
